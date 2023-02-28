@@ -1,0 +1,86 @@
+﻿@using TFG.CodeExtensions;
+@model IEnumerable<ExcelModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+@using (Html.BeginForm("Index", "", FormMethod.Post, new { enctype = "multipart/form-data" }))  
+{  
+    @Html.AntiForgeryToken()  
+    <div class="row">  
+        <div class="col-md-10">  
+            <h2>File Upload</h2>  
+            <hr />  
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })  
+  
+            <div class="form-group">                 
+                <div class="col-md-10">  
+                    <input type="file" id="files" name="files" class="form-control" required="required"><br />  
+                </div>  
+            </div>  
+  
+            <div class="form-group">  
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Upload" class="btn btn-outline-primary" />
+                </div>  
+            </div>
+            <br>
+            <hr />
+        </div>
+        
+    </div>  
+    
+}  
+  
+<div class="row">
+    <div class="col-md-10">
+        
+        <div class="form-group">
+            <div>
+              @if(Model.Count() > 0)
+              {
+                   
+                    <table class="table table-bordered table-responsive table-hover">
+                    <tr>
+                        <td colspan="100%">
+                                <b>Excelsheet Columns</b>
+                        </td>
+                    </tr>
+                        @foreach (ExcelModel e in Model)
+                        {
+                            <tr>
+                                @if(e.HasErrors.Value)
+                                {
+                                    <td colspan="100%" class="text-danger">@e.Error</td>
+                                }
+                                else
+                                {
+                                    @if (e.ColumnItems.IsCompliant() == 1)
+                                    {
+                                        <td class="text-success">PASS</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger">FAIL</td>
+                                    }
+                                    @foreach (int s in e.ColumnItems)
+                                    {
+                                        <td>@s</td>
+                                    }
+                                }
+                                                      
+                            </tr>                           
+                        }
+                </table>
+              }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
